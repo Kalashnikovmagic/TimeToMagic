@@ -11,6 +11,7 @@ document.addEventListener("gesturestart", e => e.preventDefault());
 // ================== Переменные ==================
 const secretGrid = document.getElementById("secret-grid");
 const fakeClock = document.getElementById("fake-clock");
+const wallpaperInput = document.getElementById("wallpaperInput");
 
 fakeClock.style.display = "none";
 
@@ -39,7 +40,7 @@ secretGrid.addEventListener("touchstart", e => {
   state = "wait";
 });
 
-// ================== Тап для запуска ==================
+// ================== Тап для запуска обратного отсчёта ==================
 fakeClock.addEventListener("touchstart", () => {
   if (state !== "wait") return;
 
@@ -59,7 +60,7 @@ function startCountdown() {
       renderTime(fakeTime);
       clearInterval(countdownInterval);
       countdownInterval = null;
-      state = "finished"; // обратный отсчёт завершён
+      state = "finished";
     }
   }, 1000);
 }
@@ -79,7 +80,7 @@ function renderTime(date) {
   fakeClock.querySelector(".time").textContent = `${h}:${m}`;
 }
 
-// ================== Свайп 3 пальца вниз для повторения ==================
+// ================== Свайп 3 пальца для возврата/смены обоев ==================
 let swipeStartY = null;
 let swipeActive = false;
 
@@ -94,14 +95,38 @@ document.addEventListener("touchmove", e => {
   if (!swipeActive || e.touches.length !== 3) return;
 
   const y = (e.touches[0].clientY + e.touches[1].clientY + e.touches[2].clientY) / 3;
+
+  // Свайп вниз для возврата к сетке
   if (y - swipeStartY > 90 && state === "finished") {
     fakeClock.style.display = "none";
     secretGrid.style.display = "grid";
     state = "secret";
     swipeActive = false;
   }
+
+  // Свайп вверх для выбора обоев
+  if (swipeStartY - y > 90) {
+    swipeActive = false;
+    wallpaperInput.click();
+  }
+
 }, { passive: true });
 
 document.addEventListener("touchend", e => {
   if (e.touches.length < 3) swipeActive = false;
+});
+
+// ================== Выбор обоев ==================
+wallpaperInput.addEventListener("change", (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    document.body.style.backgroundImage = `url('${e.target.result}')`;
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+    document.body.style.transition = 'background-image 0.3s ease';
+  }
+  reader.readAsDataURL(file);
 });
