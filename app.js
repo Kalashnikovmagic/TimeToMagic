@@ -1,6 +1,4 @@
 // ================== БЛОКИРОВКА ЗУМА ==================
-
-// защита от двойного тапа (double-tap zoom)
 let lastTap = 0;
 document.addEventListener("touchend", e => {
   const now = Date.now();
@@ -8,14 +6,13 @@ document.addEventListener("touchend", e => {
   lastTap = now;
 }, { passive: false });
 
-// pinch-zoom на iOS
 document.addEventListener("gesturestart", e => e.preventDefault());
 
 // ================== ПЕРЕМЕННЫЕ ==================
 const secretGrid = document.getElementById("secret-grid");
 const fakeClock = document.getElementById("fake-clock");
 
-// Сразу скрываем часы на старте
+// скрываем часы на старте
 fakeClock.style.display = "none";
 
 let realTime = null;
@@ -34,14 +31,12 @@ secretGrid.addEventListener("touchstart", e => {
   fakeTime = new Date(realTime.getTime());
   fakeTime.setMinutes(fakeTime.getMinutes() + chosenMinutes);
 
-  // скрываем сетку
   secretGrid.style.display = "none";
-
-  // показываем часы только после выбора
   fakeClock.style.display = "flex";
+
   renderTime(fakeTime);
 
-  state = "wait"; // ждем тап для запуска обратного отсчета
+  state = "wait";
 });
 
 // ================== ТАП ДЛЯ ЗАПУСКА ==================
@@ -50,20 +45,22 @@ fakeClock.addEventListener("touchstart", () => {
 
   state = "countdown";
 
-  // через 5 секунд начинаем обратный отсчет
   setTimeout(startCountdown, 5000);
 });
 
 // ================== ОБРАТНЫЙ ОТСЧЁТ ==================
+let countdownInterval = null;
 function startCountdown() {
-  const interval = setInterval(() => {
+  countdownInterval = setInterval(() => {
     fakeTime.setMinutes(fakeTime.getMinutes() - 1);
     renderTime(fakeTime);
 
     if (fakeTime.getTime() <= realTime.getTime()) {
       fakeTime = new Date(realTime.getTime());
       renderTime(fakeTime);
-      clearInterval(interval);
+      clearInterval(countdownInterval);
+      countdownInterval = null;
+      state = "finished"; // обратный отсчёт завершён
     }
   }, 1000);
 }
@@ -74,3 +71,31 @@ function renderTime(date) {
   const m = String(date.getMinutes()).padStart(2, "0");
   fakeClock.textContent = `${h}:${m}`;
 }
+
+// ================== СВАЙП 3 ПАЛЬЦА ВНИЗ ==================
+let swipeStartY = null;
+let swipeActive = false;
+
+document.addEventListener("touchstart", e => {
+  if (e.touches.length === 3) {
+    swipeActive = true;
+    swipeStartY = (e.touches[0].clientY + e.touches[1].clientY + e.touches[2].clientY) / 3;
+  }
+}, { passive: true });
+
+document.addEventListener("touchmove", e => {
+  if (!swipeActive || e.touches.length !== 3) return;
+
+  const y = (e.touches[0].clientY + e.touches[1].clientY + e.touches[2].clientY) / 3;
+  if (y - swipeStartY > 90 && state === "finished") {
+    // возвращаемся на первый экран
+    fakeClock.style.display = "none";
+    secretGrid.style.display = "grid";
+    state = "secret";
+    swipeActive = false;
+  }
+}, { passive: true });
+
+document.addEventListener("touchend", e => {
+  if (e.touches.length < 3) swipeActive = false;
+});
