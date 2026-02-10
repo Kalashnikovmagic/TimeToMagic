@@ -79,7 +79,7 @@ html, body {
   text-shadow: 0 1px 2px rgba(0,0,0,0.6);
 }
 
-/* ====== Always On Display (вверх, серое время) ====== */
+/* ====== Always On Display (вверх, серое время, сжатие по ширине) ====== */
 .clock.aod {
   justify-content: flex-start;
   align-items: center; /* центрируем горизонтально */
@@ -88,9 +88,10 @@ html, body {
 
 .clock.aod .time {
   color: var(--aod-time-color);
-  font-size: 30vh; /* растянуто вертикально 30% экрана */
-  max-width: 50%; /* сужаем горизонтально */
-  line-height: 0.8; /* чуть выше растяжение */
+  font-size: 36vh; /* сохраняем вертикальный размер */
+  max-width: 40%; /* сужаем горизонтально, чтобы помещались */
+  width: auto;
+  line-height: 0.8; /* вертикальное растяжение */
   text-align: center;
 }
 
