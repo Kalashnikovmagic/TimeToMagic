@@ -75,7 +75,7 @@ html, body {
 }
 
 .clock .time {
-  font-size: 64px; /* стандартный размер iOS */
+  font-size: 83px; /* увеличили на 30% от предыдущих 64px */
   font-weight: 600; /* чуть жирнее */
   letter-spacing: 0;
   color: #fff;
@@ -94,7 +94,7 @@ html, body {
 
 .clock.aod .time {
   color: var(--aod-time-color); /* чуть темнее */
-  font-size: 64px;              /* обычный iOS размер */
+  font-size: 83px;              /* увеличено на 30% */
   font-weight: 600;
   text-align: center;
   max-width: 90%;               /* помещается на всех экранах */
