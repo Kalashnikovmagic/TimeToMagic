@@ -1,90 +1,77 @@
 const grid = document.getElementById('secret-grid');
 const clock = document.getElementById('fake-clock');
 
-let realDate = null;
-let fakeDate = null;
+/* ===== СОСТОЯНИЯ ===== */
 
-let waitingForTap = false;
-let animationStarted = false;
+let realTime = null;
+let fakeTime = null;
 
-/* =========================
-   ЖЁСТКАЯ БЛОКИРОВКА ЖЕСТОВ
-========================= */
+let state = 'secret'; 
+// secret → wait → countdown
+
+/* ===== ПОЛНАЯ БЛОКИРОВКА ЖЕСТОВ ===== */
 
 document.addEventListener('touchstart', e => {
-  if (e.touches.length > 1) e.preventDefault();
+  e.preventDefault();
 }, { passive: false });
 
 document.addEventListener('touchmove', e => {
   e.preventDefault();
 }, { passive: false });
 
-let lastTouchEnd = 0;
 document.addEventListener('touchend', e => {
-  const now = Date.now();
-  if (now - lastTouchEnd <= 300) {
-    e.preventDefault();
-  }
-  lastTouchEnd = now;
+  e.preventDefault();
 }, { passive: false });
 
-/* =========================
-   СЕКРЕТНЫЙ ВВОД 1–9
-========================= */
+/* ===== СЕКРЕТНЫЙ ВВОД ===== */
 
-grid.addEventListener('touchstart', (e) => {
+grid.addEventListener('touchstart', e => {
   const cell = e.target.closest('.cell');
   if (!cell) return;
 
-  const jumpMinutes = Number(cell.textContent);
+  const minutes = Number(cell.textContent);
 
-  realDate = new Date();
-  fakeDate = new Date(realDate.getTime());
-  fakeDate.setMinutes(fakeDate.getMinutes() + jumpMinutes);
+  realTime = new Date();
+  fakeTime = new Date(realTime.getTime());
+  fakeTime.setMinutes(fakeTime.getMinutes() + minutes);
 
-  updateClock(fakeDate);
+  renderTime(fakeTime);
 
   grid.style.display = 'none';
   clock.style.display = 'block';
 
-  waitingForTap = true;
+  state = 'wait';
 });
 
-/* =========================
-   ТАП ДЛЯ ЗАПУСКА МАГИИ
-========================= */
+/* ===== ТАП ДЛЯ ЗАПУСКА ===== */
 
 document.addEventListener('touchstart', () => {
-  if (!waitingForTap || animationStarted) return;
+  if (state !== 'wait') return;
 
-  waitingForTap = false;
-  animationStarted = true;
+  state = 'countdown';
 
-  setTimeout(startReturnAnimation, 5000);
+  setTimeout(startCountdown, 5000);
 });
 
-/* =========================
-   ВОЗВРАТ ВРЕМЕНИ
-========================= */
+/* ===== ОБРАТНЫЙ ОТСЧЁТ ===== */
 
-function startReturnAnimation() {
+function startCountdown() {
   const interval = setInterval(() => {
-    fakeDate.setMinutes(fakeDate.getMinutes() - 1);
-    updateClock(fakeDate);
+    fakeTime.setMinutes(fakeTime.getMinutes() - 1);
+    renderTime(fakeTime);
 
-    if (fakeDate.getTime() <= realDate.getTime()) {
-      updateClock(realDate);
+    if (fakeTime.getTime() <= realTime.getTime()) {
+      fakeTime = new Date(realTime.getTime());
+      renderTime(fakeTime);
       clearInterval(interval);
     }
   }, 1000);
 }
 
-/* =========================
-   ОБНОВЛЕНИЕ ЧАСОВ
-========================= */
+/* ===== РЕНДЕР ===== */
 
-function updateClock(date) {
-  const h = date.getHours().toString().padStart(2, '0');
-  const m = date.getMinutes().toString().padStart(2, '0');
+function renderTime(date) {
+  const h = String(date.getHours()).padStart(2, '0');
+  const m = String(date.getMinutes()).padStart(2, '0');
   clock.textContent = `${h}:${m}`;
 }
