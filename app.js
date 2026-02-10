@@ -1,4 +1,4 @@
-// ================== БЛОКИРОВКА ЗУМА ==================
+// ================== Блокировка зума ==================
 let lastTap = 0;
 document.addEventListener("touchend", e => {
   const now = Date.now();
@@ -8,11 +8,10 @@ document.addEventListener("touchend", e => {
 
 document.addEventListener("gesturestart", e => e.preventDefault());
 
-// ================== ПЕРЕМЕННЫЕ ==================
+// ================== Переменные ==================
 const secretGrid = document.getElementById("secret-grid");
 const fakeClock = document.getElementById("fake-clock");
 
-// скрываем часы на старте
 fakeClock.style.display = "none";
 
 let realTime = null;
@@ -21,7 +20,7 @@ let state = "secret"; // secret → wait → countdown → finished
 let chosenMinutes = 0;
 let countdownInterval = null;
 
-// ================== СЕКРЕТНАЯ СЕТКА ==================
+// ================== Секретная сетка ==================
 secretGrid.addEventListener("touchstart", e => {
   const cell = e.target.closest(".cell");
   if (!cell) return;
@@ -40,7 +39,7 @@ secretGrid.addEventListener("touchstart", e => {
   state = "wait";
 });
 
-// ================== ТАП ДЛЯ ЗАПУСКА ==================
+// ================== Тап для запуска ==================
 fakeClock.addEventListener("touchstart", () => {
   if (state !== "wait") return;
 
@@ -49,7 +48,7 @@ fakeClock.addEventListener("touchstart", () => {
   setTimeout(startCountdown, 5000);
 });
 
-// ================== ОБРАТНЫЙ ОТСЧЁТ ==================
+// ================== Обратный отсчёт ==================
 function startCountdown() {
   countdownInterval = setInterval(() => {
     fakeTime.setMinutes(fakeTime.getMinutes() - 1);
@@ -65,7 +64,7 @@ function startCountdown() {
   }, 1000);
 }
 
-// ================== ОТОБРАЖЕНИЕ ВРЕМЕНИ С ДАТОЙ НАД ЧАСАМИ ==================
+// ================== Отображение времени с датой над часами ==================
 function renderTime(date) {
   const h = String(date.getHours()).padStart(2, "0");
   const m = String(date.getMinutes()).padStart(2, "0");
@@ -80,7 +79,7 @@ function renderTime(date) {
   fakeClock.querySelector(".time").textContent = `${h}:${m}`;
 }
 
-// ================== СВАЙП 3 ПАЛЬЦА ВНИЗ ДЛЯ ПОВТОРА ==================
+// ================== Свайп 3 пальца вниз для повторения ==================
 let swipeStartY = null;
 let swipeActive = false;
 
