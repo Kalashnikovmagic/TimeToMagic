@@ -74,11 +74,10 @@ html, body {
 }
 
 .clock .time {
-  font-size: 83px;       /* размер часов */
+  font-size: 95px;       /* увеличено с 83px до 95px */
   font-weight: 600;      /* жирнее */
   letter-spacing: 0;
   color: #b8b8b8;        /* цвет часов */
-  text-shadow: 0 1px 2px rgba(0,0,0,0.6);
   text-align: center;    /* горизонтально по центру */
   line-height: 1;
   max-width: 100%;       /* занимает максимум экрана, но не больше */
@@ -95,7 +94,7 @@ html, body {
 
 .clock.aod .time {
   color: #b8b8b8;      /* цвет часов */
-  font-size: 83px;      /* размер часов */
+  font-size: 95px;      /* увеличено с 83px до 95px */
   font-weight: 600;     /* жирнее */
   text-align: center;   /* горизонтально центр */
   max-width: 100%;      /* полностью помещается */
