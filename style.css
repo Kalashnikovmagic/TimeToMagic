@@ -75,26 +75,26 @@ html, body {
 }
 
 .clock .time {
-  font-size: 83px; /* увеличили на 30% от предыдущих 64px */
-  font-weight: 600; /* чуть жирнее */
+  font-size: 166px; /* увеличено в 2 раза от 83px */
+  font-weight: 600; /* жирнее */
   letter-spacing: 0;
   color: #fff;
   text-shadow: 0 1px 2px rgba(0,0,0,0.6);
   width: 100%;
-  text-align: center; /* горизонтально по центру */
+  text-align: center;
   line-height: 1;
 }
 
 /* ====== Always On Display ====== */
 .clock.aod {
   justify-content: flex-start; /* верхняя часть экрана */
-  align-items: center;         /* по горизонтали центр */
+  align-items: center;         /* горизонтально центр */
   padding-top: 20px;
 }
 
 .clock.aod .time {
   color: var(--aod-time-color); /* чуть темнее */
-  font-size: 83px;              /* увеличено на 30% */
+  font-size: 166px;             /* увеличено вдвое */
   font-weight: 600;
   text-align: center;
   max-width: 90%;               /* помещается на всех экранах */
