@@ -3,9 +3,12 @@
 <head>
   <meta charset="UTF-8">
 
-  <!-- КРИТИЧЕСКИ ВАЖНО для блокировки зума -->
+  <!-- КРИТИЧЕСКИ ВАЖНО -->
   <meta name="viewport"
-        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        content="width=device-width,
+                 initial-scale=1,
+                 maximum-scale=1,
+                 user-scalable=no">
 
   <title>Time To Magic</title>
 
@@ -14,7 +17,6 @@
 </head>
 <body>
 
-  <!-- Секретный ввод -->
   <div id="secret-grid" class="grid">
     <div class="cell">1</div>
     <div class="cell">2</div>
@@ -27,15 +29,8 @@
     <div class="cell">9</div>
   </div>
 
-  <!-- Фейковые часы -->
   <div id="fake-clock" class="clock">00:00</div>
 
   <script src="app.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js');
-    }
-  </script>
-
 </body>
 </html>
