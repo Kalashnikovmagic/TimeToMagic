@@ -1,8 +1,7 @@
 {
   "name": "Time To Magic",
   "short_name": "TTM",
-  "description": "Магический фокус с часами",
-  "start_url": ".",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
