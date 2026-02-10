@@ -15,7 +15,7 @@ html, body {
   height: 100%;
   overflow: hidden;
   touch-action: manipulation;
-  background: url('wallpaper.jpg') no-repeat center center/cover;
+  background: url('wallpaper1.jpg') no-repeat center center/cover;
   background-color: #000;
   color: var(--clock-color);
   font-family: -apple-system, system-ui, sans-serif;
@@ -53,7 +53,7 @@ html, body {
 
 /* ====== Фейковые часы (iOS 26 стиль) ====== */
 .clock {
-  display: none; /* по умолчанию скрыты */
+  display: none;
   position: fixed;
   inset: 0;
   display: flex;
@@ -62,7 +62,6 @@ html, body {
   align-items: center;
   color: var(--clock-color);
   text-align: center;
-
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -75,7 +74,7 @@ html, body {
   font-weight: 400;
   color: #fff;
   text-shadow: 0 1px 2px rgba(0,0,0,0.6);
-  margin-bottom: 8px; /* расстояние до часов */
+  margin-bottom: 8px;
 }
 
 .clock .time {
