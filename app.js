@@ -21,9 +21,12 @@ let state = "secret"; // secret → wait → countdown → finished
 let chosenMinutes = 0;
 let countdownInterval = null;
 
-// ================== Секретная сетка ==================
+// ================== Секретная сетка — выбор цифры только одиночным тапом ==================
 secretGrid.addEventListener("touchstart", e => {
-  const cell = e.target.closest(".cell");
+  if (e.touches.length !== 1) return; // только один палец
+
+  const touch = e.touches[0];
+  const cell = document.elementFromPoint(touch.clientX, touch.clientY)?.closest(".cell");
   if (!cell) return;
 
   chosenMinutes = Number(cell.textContent);
@@ -87,4 +90,48 @@ let swipeActive = false;
 document.addEventListener("touchstart", e => {
   if (e.touches.length === 3) {
     swipeActive = true;
-    swipeStartY = (e.touches[0].clientY + e.touches[1].clientY + e.touches
+    swipeStartY = (e.touches[0].clientY + e.touches[1].clientY + e.touches[2].clientY) / 3;
+  }
+}, { passive: true });
+
+document.addEventListener("touchmove", e => {
+  if (!swipeActive || e.touches.length !== 3) return;
+
+  const y = (e.touches[0].clientY + e.touches[1].clientY + e.touches[2].clientY) / 3;
+
+  // свайп вниз — возврат к сетке
+  if (y - swipeStartY > 90 && state === "finished") {
+    fakeClock.style.display = "none";
+    secretGrid.style.display = "grid";
+    state = "secret";
+    swipeActive = false;
+    e.preventDefault();
+  }
+
+  // свайп вверх — выбор обоев
+  if (swipeStartY - y > 90) {
+    swipeActive = false;
+    wallpaperInput.click();
+    e.preventDefault();
+  }
+
+}, { passive: false });
+
+document.addEventListener("touchend", e => {
+  if (e.touches.length < 3) swipeActive = false;
+});
+
+// ================== Выбор обоев ==================
+wallpaperInput.addEventListener("change", (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    document.body.style.backgroundImage = `url('${e.target.result}')`;
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+    document.body.style.transition = 'background-image 0.3s ease';
+  }
+  reader.readAsDataURL(file);
+});
