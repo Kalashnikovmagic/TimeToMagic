@@ -20,23 +20,27 @@ let fakeTime = null;
 let state = "secret"; // secret → wait → countdown
 let chosenMinutes = 0;
 
-// ================== СЕКРЕТНЫЙ ВВОД ==================
+// ================== СЕКРЕТНАЯ СЕТКА ==================
 secretGrid.addEventListener("touchstart", e => {
   const cell = e.target.closest(".cell");
   if (!cell) return;
 
+  // цифра, выбранная зрителем
   chosenMinutes = Number(cell.textContent);
 
+  // создаём текущее и фейковое время
   realTime = new Date();
   fakeTime = new Date(realTime.getTime());
   fakeTime.setMinutes(fakeTime.getMinutes() + chosenMinutes);
 
+  // скрываем сетку
+  secretGrid.style.display = "none";
+
+  // показываем часы только после выбора
+  fakeClock.style.display = "flex";
   renderTime(fakeTime);
 
-  secretGrid.style.display = "none";
-  fakeClock.style.display = "flex";
-
-  state = "wait"; // ждем тап
+  state = "wait"; // ждем тап для запуска обратного отсчета
 });
 
 // ================== ТАП ДЛЯ ЗАПУСКА ==================
@@ -45,6 +49,7 @@ fakeClock.addEventListener("touchstart", () => {
 
   state = "countdown";
 
+  // через 5 секунд начинаем обратный отсчёт
   setTimeout(startCountdown, 5000);
 });
 
