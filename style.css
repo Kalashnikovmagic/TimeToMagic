@@ -1,0 +1,38 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: black;
+  color: white;
+  font-family: system-ui, sans-serif;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 90px);
+  gap: 12px;
+}
+
+.cell {
+  width: 90px;
+  height: 90px;
+  background: #1a1a1a;
+  border-radius: 12px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 32px;
+  user-select: none;
+}
+
+.clock {
+  display: none;
+  font-size: 64px;
+  letter-spacing: 2px;
+}
