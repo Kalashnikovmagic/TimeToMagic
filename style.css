@@ -26,26 +26,6 @@ html, body {
   -webkit-touch-callout: none;
 }
 
-/* ====== Статус-бар ====== */
-.status-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 24px;
-  padding: 0 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #fff;
-  font-size: 12px;
-  z-index: 1000;
-}
-
-.status-bar .left span {
-  margin-right: 6px;
-}
-
 /* ====== Секретная сетка ====== */
 .grid {
   position: fixed;
