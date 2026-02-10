@@ -1,50 +1,49 @@
-* {
-  -webkit-tap-highlight-color: transparent;
+/* ========== Базовые переменные ========== */
+:root {
+  --bg: #000;
+  --clock-color: #fff;
 }
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  background: black;
-  color: white;
-
   overflow: hidden;
-
-  touch-action: none;
-  overscroll-behavior: none;
-
+  touch-action: manipulation;
+  background: var(--bg);
+  color: var(--clock-color);
   font-family: -apple-system, system-ui, sans-serif;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
-/* Секретный экран */
+/* Секретная сетка */
 .grid {
   position: fixed;
   inset: 0;
-
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(3,1fr);
+  grid-template-rows: repeat(3,1fr);
 }
 
 .cell {
   display: flex;
   justify-content: center;
   align-items: center;
-
   font-size: 48px;
   opacity: 0.05;
-
   user-select: none;
 }
 
-/* Часы */
+/* Фейковые часы */
 .clock {
   display: none;
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 72px;
-  letter-spacing: 2px;
+  color: var(--clock-color);
+  user-select: none;
 }
