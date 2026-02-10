@@ -1,8 +1,7 @@
 const grid = document.getElementById("grid");
 const clock = document.getElementById("clock");
 const dateEl = document.getElementById("date");
-const hourEl = document.getElementById("hour");
-const minuteEl = document.getElementById("minute");
+const timeEl = document.getElementById("time");
 
 let secretNumber = null;
 let countdownInterval = null;
@@ -22,7 +21,7 @@ grid.addEventListener("pointerup", e => {
 function startFakeTime(num) {
   let now = new Date();
   let hours = now.getHours();
-  let minutes = now.getMinutes() - num; // сразу "уменьшаем" на число
+  let minutes = now.getMinutes() - num;
   if(minutes < 0){
     minutes += 60;
     hours = (hours - 1 + 24) % 24;
@@ -42,8 +41,7 @@ function startFakeTime(num) {
 }
 
 function updateClock(hours, minutes) {
-  hourEl.textContent = String(hours).padStart(2,'0');
-  minuteEl.textContent = String(minutes).padStart(2,'0');
+  timeEl.textContent = `${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}`;
 }
 
 // ======= Обновление даты =======
@@ -53,4 +51,4 @@ function updateDate() {
   dateEl.textContent = now.toLocaleDateString('ru-RU', options);
 }
 updateDate();
-setInterval(updateDate, 60*1000); // обновляем каждую минуту
+setInterval(updateDate, 60*1000);
