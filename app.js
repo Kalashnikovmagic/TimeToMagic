@@ -15,6 +15,9 @@ document.addEventListener("gesturestart", e => e.preventDefault());
 const secretGrid = document.getElementById("secret-grid");
 const fakeClock = document.getElementById("fake-clock");
 
+// Сразу скрываем часы на старте
+fakeClock.style.display = "none";
+
 let realTime = null;
 let fakeTime = null;
 let state = "secret"; // secret → wait → countdown
@@ -25,10 +28,8 @@ secretGrid.addEventListener("touchstart", e => {
   const cell = e.target.closest(".cell");
   if (!cell) return;
 
-  // цифра, выбранная зрителем
   chosenMinutes = Number(cell.textContent);
 
-  // создаём текущее и фейковое время
   realTime = new Date();
   fakeTime = new Date(realTime.getTime());
   fakeTime.setMinutes(fakeTime.getMinutes() + chosenMinutes);
@@ -49,7 +50,7 @@ fakeClock.addEventListener("touchstart", () => {
 
   state = "countdown";
 
-  // через 5 секунд начинаем обратный отсчёт
+  // через 5 секунд начинаем обратный отсчет
   setTimeout(startCountdown, 5000);
 });
 
