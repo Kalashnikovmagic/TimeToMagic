@@ -82,17 +82,21 @@ html, body {
 /* ====== Always On Display (вверх, серое время) ====== */
 .clock.aod {
   justify-content: flex-start;
+  align-items: center; /* центрируем горизонтально */
   padding-top: 20px;
 }
 
 .clock.aod .time {
   color: var(--aod-time-color);
-  font-size: 25vh; /* примерно 1/4 экрана */
-  line-height: 1;
+  font-size: 30vh; /* растянуто вертикально 30% экрана */
+  max-width: 50%; /* сужаем горизонтально */
+  line-height: 0.8; /* чуть выше растяжение */
+  text-align: center;
 }
 
 .clock.aod .date {
   color: var(--aod-time-color);
   font-size: 18px;
   margin-bottom: 10px;
+  text-align: center;
 }
