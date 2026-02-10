@@ -6,33 +6,39 @@ html, body {
   color: white;
   font-family: system-ui, sans-serif;
 
+  overflow: hidden;
+  touch-action: none;
+
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+/* Секретный экран */
 .grid {
+  position: fixed;
+  inset: 0;
+
   display: grid;
-  grid-template-columns: repeat(3, 90px);
-  gap: 12px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
 }
 
 .cell {
-  width: 90px;
-  height: 90px;
-  background: #1a1a1a;
-  border-radius: 12px;
-
   display: flex;
   justify-content: center;
   align-items: center;
 
-  font-size: 32px;
+  font-size: 48px;
+  color: white;
+  opacity: 0.08; /* еле заметные цифры */
+
   user-select: none;
 }
 
+/* Фейковые часы */
 .clock {
   display: none;
-  font-size: 64px;
+  font-size: 72px;
   letter-spacing: 2px;
 }
