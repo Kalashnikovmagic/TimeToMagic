@@ -1,7 +1,7 @@
 :root {
   --bg: #000;
   --clock-color: #fff;
-  --aod-time-color: #8a8a8a; /* более тёмный серый для часов */
+  --aod-time-color: #8a8a8a; /* цвет часов для AOD */
 }
 
 /* ====== Reset ====== */
@@ -74,15 +74,15 @@ html, body {
 }
 
 .clock .time {
-  font-size: 100px;      /* увеличено до 100px */
-  font-weight: 600;      /* жирнее */
+  font-size: 110px;     /* увеличено до 110px */
+  font-weight: 600;     /* жирнее */
   letter-spacing: 0;
-  color: #8a8a8a;        /* более серый и тёмный */
-  text-align: center;    /* горизонтально по центру */
+  color: #8a8a8a;       /* более серый и тёмный */
+  text-align: center;   /* горизонтально по центру */
   line-height: 1;
-  max-width: 100%;       /* занимает максимум экрана, но не больше */
-  overflow: hidden;      /* предотвращает выезд за границы */
-  white-space: nowrap;   /* текст не переносится */
+  max-width: 100%;      /* занимает максимум экрана, но не больше */
+  overflow: hidden;     /* предотвращает выезд за границы */
+  white-space: nowrap;  /* текст не переносится */
 }
 
 /* ====== Always On Display ====== */
@@ -94,7 +94,7 @@ html, body {
 
 .clock.aod .time {
   color: #8a8a8a;     /* более тёмный серый */
-  font-size: 100px;   /* увеличено до 100px */
+  font-size: 110px;   /* увеличено до 110px */
   font-weight: 600;
   text-align: center; /* горизонтально центр */
   max-width: 100%;    /* полностью помещается */
