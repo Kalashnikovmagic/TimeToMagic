@@ -11,7 +11,6 @@ document.addEventListener("gesturestart", e => e.preventDefault());
 // ================== Переменные ==================
 const secretGrid = document.getElementById("secret-grid");
 const fakeClock = document.getElementById("fake-clock");
-const wallpaperInput = document.getElementById("wallpaperInput");
 
 fakeClock.style.display = "none";
 
@@ -83,7 +82,7 @@ function renderTime(date) {
   fakeClock.querySelector(".time").textContent = `${h}:${m}`;
 }
 
-// ================== Свайп 3 пальца для возврата/выбора обоев ==================
+// ================== Свайп 3 пальца вниз — возврат к секретной сетке ==================
 let swipeStartY = null;
 let swipeActive = false;
 
@@ -108,30 +107,8 @@ document.addEventListener("touchmove", e => {
     e.preventDefault();
   }
 
-  // свайп вверх — выбор обоев
-  if (swipeStartY - y > 90) {
-    swipeActive = false;
-    wallpaperInput.click();
-    e.preventDefault();
-  }
-
 }, { passive: false });
 
 document.addEventListener("touchend", e => {
   if (e.touches.length < 3) swipeActive = false;
-});
-
-// ================== Выбор обоев ==================
-wallpaperInput.addEventListener("change", (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    document.body.style.backgroundImage = `url('${e.target.result}')`;
-    document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundPosition = 'center';
-    document.body.style.transition = 'background-image 0.3s ease';
-  }
-  reader.readAsDataURL(file);
 });
