@@ -1,60 +1,54 @@
-const grid = document.getElementById('secret-grid');
-const clock = document.getElementById('fake-clock');
+// ================== БЛОКИРОВКА ЗУМА ==================
 
-/* ===== СОСТОЯНИЯ ===== */
+// защита от двойного тапа (double-tap zoom)
+let lastTap = 0;
+document.addEventListener("touchend", e => {
+  const now = Date.now();
+  if (now - lastTap < 300) e.preventDefault();
+  lastTap = now;
+}, { passive: false });
+
+// pinch-zoom на iOS
+document.addEventListener("gesturestart", e => e.preventDefault());
+
+// ================== ПЕРЕМЕННЫЕ ==================
+const secretGrid = document.getElementById("secret-grid");
+const fakeClock = document.getElementById("fake-clock");
 
 let realTime = null;
 let fakeTime = null;
+let state = "secret"; // secret → wait → countdown
+let chosenMinutes = 0;
 
-let state = 'secret'; 
-// secret → wait → countdown
-
-/* ===== ПОЛНАЯ БЛОКИРОВКА ЖЕСТОВ ===== */
-
-document.addEventListener('touchstart', e => {
-  e.preventDefault();
-}, { passive: false });
-
-document.addEventListener('touchmove', e => {
-  e.preventDefault();
-}, { passive: false });
-
-document.addEventListener('touchend', e => {
-  e.preventDefault();
-}, { passive: false });
-
-/* ===== СЕКРЕТНЫЙ ВВОД ===== */
-
-grid.addEventListener('touchstart', e => {
-  const cell = e.target.closest('.cell');
+// ================== СЕКРЕТНЫЙ ВВОД ==================
+secretGrid.addEventListener("touchstart", e => {
+  const cell = e.target.closest(".cell");
   if (!cell) return;
 
-  const minutes = Number(cell.textContent);
+  chosenMinutes = Number(cell.textContent);
 
   realTime = new Date();
   fakeTime = new Date(realTime.getTime());
-  fakeTime.setMinutes(fakeTime.getMinutes() + minutes);
+  fakeTime.setMinutes(fakeTime.getMinutes() + chosenMinutes);
 
   renderTime(fakeTime);
 
-  grid.style.display = 'none';
-  clock.style.display = 'block';
+  secretGrid.style.display = "none";
+  fakeClock.style.display = "flex";
 
-  state = 'wait';
+  state = "wait"; // ждем тап
 });
 
-/* ===== ТАП ДЛЯ ЗАПУСКА ===== */
+// ================== ТАП ДЛЯ ЗАПУСКА ==================
+fakeClock.addEventListener("touchstart", () => {
+  if (state !== "wait") return;
 
-document.addEventListener('touchstart', () => {
-  if (state !== 'wait') return;
-
-  state = 'countdown';
+  state = "countdown";
 
   setTimeout(startCountdown, 5000);
 });
 
-/* ===== ОБРАТНЫЙ ОТСЧЁТ ===== */
-
+// ================== ОБРАТНЫЙ ОТСЧЁТ ==================
 function startCountdown() {
   const interval = setInterval(() => {
     fakeTime.setMinutes(fakeTime.getMinutes() - 1);
@@ -68,10 +62,9 @@ function startCountdown() {
   }, 1000);
 }
 
-/* ===== РЕНДЕР ===== */
-
+// ================== ОТОБРАЖЕНИЕ ВРЕМЕНИ ==================
 function renderTime(date) {
-  const h = String(date.getHours()).padStart(2, '0');
-  const m = String(date.getMinutes()).padStart(2, '0');
-  clock.textContent = `${h}:${m}`;
+  const h = String(date.getHours()).padStart(2, "0");
+  const m = String(date.getMinutes()).padStart(2, "0");
+  fakeClock.textContent = `${h}:${m}`;
 }
