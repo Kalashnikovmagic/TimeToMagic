@@ -3,7 +3,7 @@
   --clock-color: #fff;
 }
 
-/* Базовый reset */
+/* ====== Базовый reset ====== */
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
@@ -26,7 +26,27 @@ html, body {
   -webkit-touch-callout: none;
 }
 
-/* Секретная сетка */
+/* ====== Статус-бар ====== */
+.status-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
+  padding: 0 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+  font-size: 12px;
+  z-index: 1000;
+}
+
+.status-bar .left span {
+  margin-right: 6px;
+}
+
+/* ====== Секретная сетка ====== */
 .grid {
   position: fixed;
   inset: 0;
@@ -40,7 +60,7 @@ html, body {
   justify-content: center;
   align-items: center;
   font-size: 48px;
-  opacity: 0.3; /* более заметная */
+  opacity: 0.3; /* более заметная, чем раньше */
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -48,20 +68,31 @@ html, body {
   -webkit-touch-callout: none;
 }
 
-/* Фейковые часы */
+/* ====== Фейковые часы ====== */
 .clock {
   display: none; /* по умолчанию скрыты */
   position: fixed;
   inset: 0;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-size: 72px;
   color: var(--clock-color);
+  text-align: center;
 
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
+}
+
+.clock .time {
+  font-size: 72px;
+}
+
+.clock .date {
+  font-size: 18px;
+  opacity: 0.7;
+  margin-top: 4px;
 }
