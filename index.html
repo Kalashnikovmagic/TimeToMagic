@@ -16,6 +16,15 @@
 </head>
 <body>
 
+  <!-- ===== Статус-бар ===== -->
+  <div class="status-bar">
+    <div class="left">
+      <span class="signal">📶</span>
+      <span class="battery">🔋</span>
+    </div>
+    <div class="right">MTS RUS</div>
+  </div>
+
   <!-- СЕКРЕТНАЯ СЕТКА 3x3 -->
   <div id="secret-grid" class="grid">
     <div class="cell">1</div>
@@ -29,8 +38,11 @@
     <div class="cell">9</div>
   </div>
 
-  <!-- ФЕЙКОВЫЕ ЧАСЫ -->
-  <div id="fake-clock" class="clock">00:00</div>
+  <!-- ФЕЙКОВЫЕ ЧАСЫ С ДАТОЙ -->
+  <div id="fake-clock" class="clock">
+    <div class="time">00:00</div>
+    <div class="date"></div>
+  </div>
 
   <script src="app.js"></script>
 </body>
