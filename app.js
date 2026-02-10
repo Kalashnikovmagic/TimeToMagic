@@ -17,8 +17,9 @@ fakeClock.style.display = "none";
 
 let realTime = null;
 let fakeTime = null;
-let state = "secret"; // secret → wait → countdown
+let state = "secret"; // secret → wait → countdown → finished
 let chosenMinutes = 0;
+let countdownInterval = null;
 
 // ================== СЕКРЕТНАЯ СЕТКА ==================
 secretGrid.addEventListener("touchstart", e => {
@@ -49,7 +50,6 @@ fakeClock.addEventListener("touchstart", () => {
 });
 
 // ================== ОБРАТНЫЙ ОТСЧЁТ ==================
-let countdownInterval = null;
 function startCountdown() {
   countdownInterval = setInterval(() => {
     fakeTime.setMinutes(fakeTime.getMinutes() - 1);
@@ -65,14 +65,21 @@ function startCountdown() {
   }, 1000);
 }
 
-// ================== ОТОБРАЖЕНИЕ ВРЕМЕНИ ==================
+// ================== ОТОБРАЖЕНИЕ ВРЕМЕНИ С ДАТОЙ ==================
 function renderTime(date) {
   const h = String(date.getHours()).padStart(2, "0");
   const m = String(date.getMinutes()).padStart(2, "0");
-  fakeClock.textContent = `${h}:${m}`;
+
+  const days = ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"];
+  const months = ["янв.","фев.","мар.","апр.","май","июн.","июл.","авг.","сен.","окт.","ноя.","дек."];
+
+  const day = days[date.getDay()];
+  const monthDay = `${date.getDate()} ${months[date.getMonth()]}`;
+
+  fakeClock.innerHTML = `<div class="time">${h}:${m}</div><div class="date">${day} ${monthDay}</div>`;
 }
 
-// ================== СВАЙП 3 ПАЛЬЦА ВНИЗ ==================
+// ================== СВАЙП 3 ПАЛЬЦА ВНИЗ ДЛЯ ПОВТОРА ==================
 let swipeStartY = null;
 let swipeActive = false;
 
@@ -88,7 +95,6 @@ document.addEventListener("touchmove", e => {
 
   const y = (e.touches[0].clientY + e.touches[1].clientY + e.touches[2].clientY) / 3;
   if (y - swipeStartY > 90 && state === "finished") {
-    // возвращаемся на первый экран
     fakeClock.style.display = "none";
     secretGrid.style.display = "grid";
     state = "secret";
