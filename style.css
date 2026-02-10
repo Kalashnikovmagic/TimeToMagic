@@ -69,7 +69,7 @@ html, body {
   font-weight: 500;
   color: #fff;
   text-shadow: 0 1px 2px rgba(0,0,0,0.6);
-  margin-bottom: 4px; /* ближе к часам */
+  margin-bottom: 4px;
   text-align: center;
 }
 
@@ -82,21 +82,6 @@ html, body {
   max-width: 100%;
   overflow: hidden;
   white-space: nowrap;
-
-  display: flex;           /* фиксируем ":" */
-  justify-content: center;
-  align-items: center;
-}
-
-.clock .time .hour,
-.clock .time .minute {
-  display: inline-block;
-}
-
-.clock .time .colon {
-  display: inline-block;
-  width: 0.3em;
-  text-align: center;
 }
 
 /* ====== Always On Display ====== */
@@ -114,15 +99,7 @@ html, body {
   max-width: 100%;
   overflow: hidden;
   white-space: nowrap;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
-
-.clock.aod .time .hour,
-.clock.aod .time .minute { display: inline-block; }
-.clock.aod .time .colon { width: 0.3em; text-align: center; }
 
 .clock.aod .date {
   font-size: 22px;
