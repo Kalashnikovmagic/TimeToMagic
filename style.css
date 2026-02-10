@@ -48,7 +48,7 @@ html, body {
   user-select: none;
 }
 
-/* ====== Фейковые часы (iOS 26 стиль) ====== */
+/* ====== Фейковые часы ====== */
 .clock {
   display: none;
   position: fixed;
@@ -56,12 +56,12 @@ html, body {
   display: flex;
   flex-direction: column;
   justify-content: flex-start; /* верхняя часть экрана */
-  align-items: center;        /* по центру горизонтали */
+  align-items: center;        /* горизонтально по центру */
   color: var(--clock-color);
   text-align: center;
   -webkit-user-select: none;
   user-select: none;
-  padding-top: 20px; /* немного отступ сверху */
+  padding-top: 20px; /* верхний отступ */
 }
 
 .clock .date {
@@ -70,29 +70,33 @@ html, body {
   color: #fff;
   text-shadow: 0 1px 2px rgba(0,0,0,0.6);
   margin-bottom: 8px;
+  width: 100%;
+  text-align: center; /* дата по центру */
 }
 
 .clock .time {
-  font-size: 48px; /* уменьшенный размер времени */
   font-weight: 400;
   letter-spacing: -1px;
   color: #fff;
   text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  width: 100%;
+  text-align: center; /* по горизонтали центр */
+  max-width: 60%;    /* ограничение ширины, помещается на экране */
+  font-size: 18vh;   /* уменьшенный размер, помещается */
+  line-height: 1;
 }
 
-/* ====== Always On Display (верхняя часть, серое время, горизонтально по центру) ====== */
+/* ====== Always On Display ====== */
 .clock.aod {
   justify-content: flex-start; /* верхняя часть экрана */
-  align-items: center;         /* горизонтально по центру */
+  align-items: center;         /* горизонтально центр */
   padding-top: 20px;
 }
 
 .clock.aod .time {
   color: var(--aod-time-color);
-  font-size: 18vh; /* уменьшенный размер, помещается */
-  max-width: 60%;  /* горизонтально ограничено */
-  width: auto;
-  line-height: 1;
+  font-size: 18vh; /* сохраняем размер */
+  max-width: 60%;  /* помещается на любом экране */
   text-align: center;
 }
 
