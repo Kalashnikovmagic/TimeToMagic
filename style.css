@@ -15,8 +15,7 @@ html, body {
   height: 100%;
   overflow: hidden;
   touch-action: manipulation;
-  background: url('wallpaper1.jpg') no-repeat center center/cover;
-  background-color: #000;
+  background: #000;
   color: var(--clock-color);
   font-family: -apple-system, system-ui, sans-serif;
 
