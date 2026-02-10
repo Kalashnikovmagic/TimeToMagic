@@ -65,7 +65,7 @@ function startCountdown() {
   }, 1000);
 }
 
-// ================== ОТОБРАЖЕНИЕ ВРЕМЕНИ С ДАТОЙ ==================
+// ================== ОТОБРАЖЕНИЕ ВРЕМЕНИ С ДАТОЙ НАД ЧАСАМИ ==================
 function renderTime(date) {
   const h = String(date.getHours()).padStart(2, "0");
   const m = String(date.getMinutes()).padStart(2, "0");
@@ -76,7 +76,8 @@ function renderTime(date) {
   const day = days[date.getDay()];
   const monthDay = `${date.getDate()} ${months[date.getMonth()]}`;
 
-  fakeClock.innerHTML = `<div class="time">${h}:${m}</div><div class="date">${day} ${monthDay}</div>`;
+  fakeClock.querySelector(".date").textContent = `${day} ${monthDay}`;
+  fakeClock.querySelector(".time").textContent = `${h}:${m}`;
 }
 
 // ================== СВАЙП 3 ПАЛЬЦА ВНИЗ ДЛЯ ПОВТОРА ==================
