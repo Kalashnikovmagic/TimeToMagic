@@ -19,28 +19,10 @@ let fakeTime = null;
 let state = "secret"; // secret → wait → countdown → finished
 let chosenMinutes = 0;
 let countdownInterval = null;
-let extraMinuteActive = false; // индикатор режима
 
-// ================== СОЗДАНИЕ СЕКРЕТНОЙ ТОЧКИ ==================
-const indicatorDot = document.createElement("div");
-indicatorDot.style.position = "fixed";
-indicatorDot.style.bottom = "12px";
-indicatorDot.style.left = "50%";
-indicatorDot.style.transform = "translateX(-50%)";
-indicatorDot.style.width = "6px";
-indicatorDot.style.height = "6px";
-indicatorDot.style.borderRadius = "50%";
-indicatorDot.style.background = "white";
-indicatorDot.style.opacity = "0.4";
-indicatorDot.style.display = "none";
-indicatorDot.style.pointerEvents = "none";
-indicatorDot.style.zIndex = "9999";
-
-document.body.appendChild(indicatorDot);
-
-// ================== Секретная сетка — выбор цифры ==================
+// ================== Секретная сетка — выбор цифры только одиночным тапом ==================
 secretGrid.addEventListener("touchstart", e => {
-  if (e.touches.length !== 1) return;
+  if (e.touches.length !== 1) return; // только один палец
 
   const touch = e.touches[0];
   const cell = document.elementFromPoint(touch.clientX, touch.clientY)?.closest(".cell");
@@ -49,25 +31,11 @@ secretGrid.addEventListener("touchstart", e => {
   chosenMinutes = Number(cell.textContent);
 
   realTime = new Date();
-
-  // ===== Логика +1 минута если < 20 сек =====
-  const secondsLeft = 60 - realTime.getSeconds();
-  extraMinuteActive = false;
-
-  let extraMinute = 0;
-  if (secondsLeft < 20) {
-    extraMinute = 1;
-    extraMinuteActive = true;
-  }
-
   fakeTime = new Date(realTime.getTime());
-  fakeTime.setMinutes(fakeTime.getMinutes() + chosenMinutes + extraMinute);
+  fakeTime.setMinutes(fakeTime.getMinutes() + chosenMinutes);
 
   secretGrid.style.display = "none";
   fakeClock.style.display = "flex";
-
-  // показываем точку если режим активен
-  indicatorDot.style.display = extraMinuteActive ? "block" : "none";
 
   renderTime(fakeTime);
 
@@ -79,6 +47,7 @@ fakeClock.addEventListener("touchstart", () => {
   if (state !== "wait") return;
 
   state = "countdown";
+
   setTimeout(startCountdown, 5000);
 });
 
@@ -98,7 +67,7 @@ function startCountdown() {
   }, 1000);
 }
 
-// ================== Отображение времени ==================
+// ================== Отображение времени с датой над часами ==================
 function renderTime(date) {
   const h = String(date.getHours()).padStart(2, "0");
   const m = String(date.getMinutes()).padStart(2, "0");
@@ -113,7 +82,7 @@ function renderTime(date) {
   fakeClock.querySelector(".time").textContent = `${h}:${m}`;
 }
 
-// ================== Свайп 3 пальца вниз — возврат ==================
+// ================== Свайп 3 пальца вниз — возврат к секретной сетке ==================
 let swipeStartY = null;
 let swipeActive = false;
 
@@ -129,10 +98,10 @@ document.addEventListener("touchmove", e => {
 
   const y = (e.touches[0].clientY + e.touches[1].clientY + e.touches[2].clientY) / 3;
 
+  // свайп вниз — возврат к сетке
   if (y - swipeStartY > 90 && state === "finished") {
     fakeClock.style.display = "none";
     secretGrid.style.display = "grid";
-    indicatorDot.style.display = "none"; // скрываем точку
     state = "secret";
     swipeActive = false;
     e.preventDefault();
