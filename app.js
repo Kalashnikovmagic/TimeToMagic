@@ -20,7 +20,8 @@ let state = "secret"; // secret → wait → countdown → finished
 let chosenMinutes = 0;
 let countdownInterval = null;
 
-let extraMinuteMode = false; // <-- индикатор +1 минуты
+let extraMinuteMode = false; // индикатор +1 минуты
+let targetTime = null;       // точка, до которой отсчитываем
 
 // ================== Секретная сетка ==================
 secretGrid.addEventListener("touchstart", e => {
@@ -38,12 +39,15 @@ secretGrid.addEventListener("touchstart", e => {
   // ===== Проверка на +1 минуту =====
   const secondsLeft = 60 - realTime.getSeconds();
   extraMinuteMode = false;
+  targetTime = new Date(realTime.getTime());
 
   if (secondsLeft < 20) {
-    fakeTime.setMinutes(fakeTime.getMinutes() + 1);
     extraMinuteMode = true;
+    targetTime.setMinutes(targetTime.getMinutes() + 1);
   }
 
+  // fakeTime = targetTime + выбранное количество минут
+  fakeTime = new Date(targetTime.getTime());
   fakeTime.setMinutes(fakeTime.getMinutes() + chosenMinutes);
 
   secretGrid.style.display = "none";
@@ -68,8 +72,9 @@ function startCountdown() {
     fakeTime.setMinutes(fakeTime.getMinutes() - 1);
     renderTime(fakeTime);
 
-    if (fakeTime.getTime() <= realTime.getTime()) {
-      fakeTime = new Date(realTime.getTime());
+    if (fakeTime.getTime() <= targetTime.getTime()) {
+      // фиксируем финальное время
+      fakeTime = new Date(targetTime.getTime());
       renderTime(fakeTime);
       clearInterval(countdownInterval);
       countdownInterval = null;
