@@ -20,9 +20,11 @@ let state = "secret"; // secret → wait → countdown → finished
 let chosenMinutes = 0;
 let countdownInterval = null;
 
-// ================== Секретная сетка — выбор цифры только одиночным тапом ==================
+let extraMinuteMode = false; // <-- индикатор +1 минуты
+
+// ================== Секретная сетка ==================
 secretGrid.addEventListener("touchstart", e => {
-  if (e.touches.length !== 1) return; // только один палец
+  if (e.touches.length !== 1) return;
 
   const touch = e.touches[0];
   const cell = document.elementFromPoint(touch.clientX, touch.clientY)?.closest(".cell");
@@ -32,6 +34,16 @@ secretGrid.addEventListener("touchstart", e => {
 
   realTime = new Date();
   fakeTime = new Date(realTime.getTime());
+
+  // ===== Проверка на +1 минуту =====
+  const secondsLeft = 60 - realTime.getSeconds();
+  extraMinuteMode = false;
+
+  if (secondsLeft < 20) {
+    fakeTime.setMinutes(fakeTime.getMinutes() + 1);
+    extraMinuteMode = true;
+  }
+
   fakeTime.setMinutes(fakeTime.getMinutes() + chosenMinutes);
 
   secretGrid.style.display = "none";
@@ -47,7 +59,6 @@ fakeClock.addEventListener("touchstart", () => {
   if (state !== "wait") return;
 
   state = "countdown";
-
   setTimeout(startCountdown, 5000);
 });
 
@@ -67,22 +78,26 @@ function startCountdown() {
   }, 1000);
 }
 
-// ================== Отображение времени с датой над часами ==================
+// ================== Отображение времени ==================
 function renderTime(date) {
   const h = String(date.getHours()).padStart(2, "0");
   const m = String(date.getMinutes()).padStart(2, "0");
 
   const days = ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"];
-  const months = ["янв.","фев.","мар.","апр.","май","июн.","июл.","авг.","сен.","окт.","ноя.","дек."];
+  const months = ["янв","фев","мар","апр","май","июн","июл","авг","сен","окт","ноя","дек"];
 
   const day = days[date.getDay()];
   const monthDay = `${date.getDate()} ${months[date.getMonth()]}`;
 
-  fakeClock.querySelector(".date").textContent = `${day} ${monthDay}`;
+  const dateText = extraMinuteMode
+    ? `${day} ${monthDay}.`
+    : `${day} ${monthDay}`;
+
+  fakeClock.querySelector(".date").textContent = dateText;
   fakeClock.querySelector(".time").textContent = `${h}:${m}`;
 }
 
-// ================== Свайп 3 пальца вниз — возврат к секретной сетке ==================
+// ================== Свайп 3 пальца вниз ==================
 let swipeStartY = null;
 let swipeActive = false;
 
@@ -98,7 +113,6 @@ document.addEventListener("touchmove", e => {
 
   const y = (e.touches[0].clientY + e.touches[1].clientY + e.touches[2].clientY) / 3;
 
-  // свайп вниз — возврат к сетке
   if (y - swipeStartY > 90 && state === "finished") {
     fakeClock.style.display = "none";
     secretGrid.style.display = "grid";
