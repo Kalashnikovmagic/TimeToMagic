@@ -1,64 +1,51 @@
-// ================== Блокировка зума ==================
 let lastTap = 0;
-document.addEventListener("touchend", e => {
+
+document.addEventListener("touchend", event => {
   const now = Date.now();
-  if (now - lastTap < 300) e.preventDefault();
+  if (now - lastTap < 300) event.preventDefault();
   lastTap = now;
 }, { passive: false });
 
-document.addEventListener("gesturestart", e => e.preventDefault());
+document.addEventListener("gesturestart", event => event.preventDefault());
 
-// ================== Переменные ==================
 const secretGrid = document.getElementById("secret-grid");
 const fakeClock = document.getElementById("fake-clock");
 
-fakeClock.style.display = "none";
-
-let realTime = null;
 let fakeTime = null;
-let state = "secret"; // secret → wait → countdown → finished
+let state = "secret";
 let chosenMinutes = 0;
 let countdownInterval = null;
+let extraMinuteMode = false;
+let targetTime = null;
 
-let extraMinuteMode = false; // индикатор +1 минуты
-let targetTime = null;       // точка, до которой отсчитываем
+secretGrid.addEventListener("touchstart", event => {
+  if (event.touches.length !== 1) return;
 
-// ================== Секретная сетка ==================
-secretGrid.addEventListener("touchstart", e => {
-  if (e.touches.length !== 1) return;
-
-  const touch = e.touches[0];
+  const touch = event.touches[0];
   const cell = document.elementFromPoint(touch.clientX, touch.clientY)?.closest(".cell");
   if (!cell) return;
 
   chosenMinutes = Number(cell.textContent);
 
-  realTime = new Date();
-  fakeTime = new Date(realTime.getTime());
-
-  // ===== Проверка на +1 минуту =====
+  const realTime = new Date();
   const secondsLeft = 60 - realTime.getSeconds();
-  extraMinuteMode = false;
+
+  extraMinuteMode = secondsLeft < 20;
   targetTime = new Date(realTime.getTime());
 
-  if (secondsLeft < 20) {
-    extraMinuteMode = true;
+  if (extraMinuteMode) {
     targetTime.setMinutes(targetTime.getMinutes() + 1);
   }
 
-  // fakeTime = targetTime + выбранное количество минут
   fakeTime = new Date(targetTime.getTime());
   fakeTime.setMinutes(fakeTime.getMinutes() + chosenMinutes);
 
   secretGrid.style.display = "none";
   fakeClock.style.display = "flex";
-
   renderTime(fakeTime);
-
   state = "wait";
 });
 
-// ================== Тап для запуска обратного отсчёта ==================
 fakeClock.addEventListener("touchstart", () => {
   if (state !== "wait") return;
 
@@ -66,14 +53,12 @@ fakeClock.addEventListener("touchstart", () => {
   setTimeout(startCountdown, 5000);
 });
 
-// ================== Обратный отсчёт ==================
 function startCountdown() {
   countdownInterval = setInterval(() => {
     fakeTime.setMinutes(fakeTime.getMinutes() - 1);
     renderTime(fakeTime);
 
     if (fakeTime.getTime() <= targetTime.getTime()) {
-      // фиксируем финальное время
       fakeTime = new Date(targetTime.getTime());
       renderTime(fakeTime);
       clearInterval(countdownInterval);
@@ -83,51 +68,50 @@ function startCountdown() {
   }, 1000);
 }
 
-// ================== Отображение времени ==================
 function renderTime(date) {
-  const h = String(date.getHours()).padStart(2, "0");
-  const m = String(date.getMinutes()).padStart(2, "0");
-
-  const days = ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"];
-  const months = ["янв","фев","мар","апр","май","июн","июл","авг","сен","окт","ноя","дек"];
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const days = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+  const months = ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"];
 
   const day = days[date.getDay()];
   const monthDay = `${date.getDate()} ${months[date.getMonth()]}`;
-
-  const dateText = extraMinuteMode
-    ? `${day} ${monthDay}.`
-    : `${day} ${monthDay}`;
+  const dateText = extraMinuteMode ? `${day} ${monthDay}.` : `${day} ${monthDay}`;
 
   fakeClock.querySelector(".date").textContent = dateText;
-  fakeClock.querySelector(".time").textContent = `${h}:${m}`;
+  fakeClock.querySelector(".time").textContent = `${hours}:${minutes}`;
 }
 
-// ================== Свайп 3 пальца вниз ==================
 let swipeStartY = null;
 let swipeActive = false;
 
-document.addEventListener("touchstart", e => {
-  if (e.touches.length === 3) {
-    swipeActive = true;
-    swipeStartY = (e.touches[0].clientY + e.touches[1].clientY + e.touches[2].clientY) / 3;
-  }
+document.addEventListener("touchstart", event => {
+  if (event.touches.length !== 3) return;
+
+  swipeActive = true;
+  swipeStartY = [...event.touches].reduce((sum, touch) => sum + touch.clientY, 0) / 3;
 }, { passive: true });
 
-document.addEventListener("touchmove", e => {
-  if (!swipeActive || e.touches.length !== 3) return;
+document.addEventListener("touchmove", event => {
+  if (!swipeActive || event.touches.length !== 3) return;
 
-  const y = (e.touches[0].clientY + e.touches[1].clientY + e.touches[2].clientY) / 3;
+  const y = [...event.touches].reduce((sum, touch) => sum + touch.clientY, 0) / 3;
 
   if (y - swipeStartY > 90 && state === "finished") {
     fakeClock.style.display = "none";
     secretGrid.style.display = "grid";
     state = "secret";
     swipeActive = false;
-    e.preventDefault();
+    event.preventDefault();
   }
-
 }, { passive: false });
 
-document.addEventListener("touchend", e => {
-  if (e.touches.length < 3) swipeActive = false;
-});
+document.addEventListener("touchend", () => {
+  swipeActive = false;
+}, { passive: true });
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js").catch(console.error);
+  });
+}
